@@ -9,9 +9,11 @@ The exact commands will be filled in after the stack ADR is accepted. No PR may 
 - Integration tests for persistence, provider adapters and APIs where applicable.
 - Dependency and license review for new packages/models/assets.
 - Secret scanning and checks for accidentally added user data or model weights.
-- QA agent report with findings categorized as blocker/major/minor/nit.
+- Independent QA agent report with findings categorized as blocker/major/minor/nit. Merge only with no open blocker or major finding.
 
 ## Sensitive changes
+Each change below additionally requires an independent `security-privacy-reviewer` report with no open blocker or major finding.
+
 - Auth, permissions, friends, sharing, public profiles: authorization and tenant-isolation tests.
 - Memory: inspect/edit/export/delete tests, provenance checks, retention policy tests.
 - Camera, microphone, spatial data: permission-denied behavior, no-capture/no-upload defaults and deletion tests.
@@ -23,4 +25,4 @@ The exact commands will be filled in after the stack ADR is accepted. No PR may 
 - Reproducible clean install from docs.
 - Migration and rollback notes where applicable.
 - Release notes and third-party notices.
-- Human approval by maintainer.
+- Independent QA and security agent sign-off recorded in the release PR.

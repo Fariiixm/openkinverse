@@ -1,3 +1,5 @@
+> **Historical bootstrap prompt.** Its approval steps are superseded by the autonomy policy in `CLAUDE.md`.
+
 You are the engineering lead for OpenKinverse. Read `CLAUDE.md`, `START_HERE.md`, `docs/PRODUCT_VISION.md`, `docs/ARCHITECTURE_PRINCIPLES.md`, `docs/ROADMAP.md`, `docs/STATUS.md`, and `docs/QUALITY_GATES.md`.
 
 This is Milestone 0: discovery and architecture selection. Do NOT implement the whole product, do NOT create a large scaffold, do NOT install frameworks or paid services, and do NOT assume a mobile runtime before verifying target-device support.
@@ -32,4 +34,4 @@ Constraints:
 - No unrestricted tools, shell access, arbitrary agent-generated code execution or hidden recording.
 - Prefer a small first vertical slice and explicitly defer broad social/network/marketplace features.
 
-Do not start implementing code in this milestone. Finish with a decision summary, evidence, open questions that truly block a decision, and the exact next 3-7 implementation issues. Ask me to approve ADRs before code generation. If you reach usage limits or encounter API errors, update status/handoff docs and stop cleanly.
+Do not start implementing code in this milestone. Finish with a decision summary, evidence, open questions that truly block a decision, and the exact next 3-7 implementation issues. The lead accepts ADRs under the autonomy policy in `CLAUDE.md`. If you reach usage limits or encounter API errors, update status/handoff docs and stop cleanly.

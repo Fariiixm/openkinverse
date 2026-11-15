@@ -2,7 +2,7 @@
 
 - Status: Proposed
 - Date: YYYY-MM-DD
-- Decision owners: Maintainers
+- Decision owners: Engineering lead with principal-architect input; owner may override
 
 ## Context
 What problem are we solving? What constraints and target devices matter?

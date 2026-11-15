@@ -1,18 +1,25 @@
 # Project status
 
-- Current phase: 0 — Project foundation.
-- Current milestone: repository bootstrap and technical discovery.
+- Current phase: 0 — Project foundation (milestone **M0 Foundation**).
+- Operating model: autonomous engineering organization (see `CLAUDE.md`). Backlog: GitHub issues #2–#26, prioritized with `priority:P0`–`P3` labels and milestones M0–M5.
 - Current vertical slice: not implemented.
-- Decisions accepted: none yet; proposals in `docs/ARCHITECTURE_PRINCIPLES.md` are not final.
-- Blockers: confirm project name/owner, operating system, target phone(s), AR runtime and Graphify distribution/version.
-- Latest verified checks: none for product code (source tree not scaffolded yet). Configuration checks on branch `chore/initial-project-fixes`: settings JSON parses, status-line script runs with `py`.
-- In progress: branch `chore/initial-project-fixes` (status-line command, permission rules, Graphify fallback, ADR template numbering, agent boundaries, language policy). Committed locally; not pushed; no PR opened yet.
-- Tooling gaps: Graphify not installed (skills fall back to Grep/Glob); GitHub CLI `gh` not installed; GitHub branch protection for `main` not verified.
+- Decisions accepted: none yet. ADR-0001 to ADR-0003 are tracked by issues #5–#7.
 - Last updated: 2026-11-15.
 
-## Next actions
+## History
 
-1. Create the GitHub repository and add this starter kit.
-2. Run the first Claude Code discovery session.
-3. Ask architect and spatial agents to compare AR platform options on target devices.
-4. Write and accept ADR-0001 (platform and runtime; not yet written) before scaffolding production code. The template is `docs/decisions/ADR-0000-template.md`.
+- PR #1 (`chore/initial-project-fixes`) was squash-merged into `main` as `9000b4e` on 2026-11-15 **without review**. `gh pr merge --auto` merged it immediately because auto-merge is disabled on the repository and `main` has no required checks. The content matched the reviewed local commit and contained no secrets. The merge policy in `CLAUDE.md` now forbids `--auto` while auto-merge is disabled.
+
+## Blockers requiring the owner
+
+1. **Repository administration permission.** The `gh` fine-grained token returns HTTP 403 for repository settings, branch protection and rulesets. Grant the token the repository permission **Administration: Read and write** (or apply the settings in issue #4 manually). Until then: no branch protection on `main`, auto-merge disabled, merge commits allowed.
+2. Resolved 2026-11-15: the owner removed the routine `ask` rules (checkout/switch main, commit, push, merge, rebase) from `.claude/settings.json` via `/permissions`. Only `git reset --hard` still asks. Claude Code attribution is disabled in the same file.
+
+## Latest verified checks
+
+- None for product code (source tree not scaffolded yet).
+
+## Tooling
+
+- Graphify: not installed; Grep/Glob fallback (see `docs/TOOLING.md`).
+- GitHub CLI: installed and authenticated; issue and PR operations work; settings operations return 403.
