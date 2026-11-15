@@ -21,5 +21,6 @@
 
 ## Tooling
 
-- Graphify: not installed; Grep/Glob fallback (see `docs/TOOLING.md`).
+- Graphify: `graphifyy` 0.9.111 installed by the owner (2026-11-15). Graph is a local, git-ignored artifact rebuilt with `graphify update .` and by local git hooks; CI builds it in the `graph` workflow. See `docs/TOOLING.md`.
 - GitHub CLI: installed and authenticated; issue and PR operations work; settings operations return 403.
+- Agent team (2026-11-15): devops (#8, #3), backend (#10), simulation (#11), architect (#29, PR #32; reviewed PR #28 with changes requested), qa (#30, PR #31). Agents work in isolated git worktrees under `.claude/worktrees/` (git-ignored).

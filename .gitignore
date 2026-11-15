@@ -35,3 +35,9 @@ model-weights/
 *.ckpt
 *.pt
 *.pth
+
+# Claude Code local agent state and worktrees (never commit)
+.claude/agent-memory/
+.claude/worktrees/
+.claude/settings.local.json
+*.graphify-bak
