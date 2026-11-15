@@ -75,7 +75,7 @@ Exit criteria:
 3. Bounded catch-up: catching up beyond the maximum window completes in bounded time and records a skip event; the time budget is measured and recorded in the PR (target to be set in #30).
 4. Persistence: a character created through `/v1`, followed by a server restart, returns the same state plus deterministic catch-up (integration test against a temporary SQLite database).
 5. Dialogue: the mock provider round-trips through `/v1`; non-allowlisted or state-illegal intents are rejected and logged, never executed (contract tests).
-6. Memory: ADR-0004 acceptance criteria 1 to 9 pass as automated tests.
+6. Memory: ADR-0004 acceptance criteria 1 to 10 pass as automated tests.
 7. Privacy defaults: a test enumerates all created resources and confirms default scope `private`; the server binds to `127.0.0.1` by default; no network call leaves the machine during the test suite with the mock provider.
 8. Viewer: the desktop web viewer renders the room and character from server state and labels needs and activities as simulation state; automated accessibility check (tool chosen in #30) reports no critical violations.
 9. AR: on at least one ARCore-capable Android device, a recorded manual test shows placement, app close, reopen and re-alignment; the device model and browser version are recorded. Unsupported devices show the fallback message (automated test of the capability check). If no device is available, this criterion is marked blocked, not passed.

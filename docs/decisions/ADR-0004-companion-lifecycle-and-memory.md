@@ -49,15 +49,19 @@ Adopt A2, B2 and C2, with the contracts below. Field names are normative for `@o
 
 ### 1. Companion lifecycle
 
-A companion is a character (`chr_`) plus the world it inhabits (`wld_`). Lifecycle states are stored on the character:
+A companion is a character (`chr_`) plus the world it inhabits (`wld_`). The canonical companion definition stored by the server is the ADR-0003 `CharacterDefinition` (the same schema used in `CharacterBundle`), so export and import are lossless for the definition; API representations derive from it. The stored lifecycle state is one of `active | paused | archived`:
 
 | State | Simulation | Dialogue | Notes |
 | --- | --- | --- | --- |
 | `active` | Advances lazily by deterministic catch-up when read or when it receives input (ADR-0002) | Allowed | Default after creation or import |
 | `paused` | Simulated time is frozen; on resume the paused interval is skipped, recorded by `simulation.paused` / `simulation.resumed` events | Disabled | Owner-initiated; lets the owner stop the "life" without deleting |
-| `deleting` | Frozen | Disabled | Transient while the cascade runs; the API returns `410 Gone` for the character |
+| `archived` | Frozen, as for `paused` | Disabled | Owner-initiated; excluded from default listings; data retained; can return to `active` (the frozen interval is skipped and recorded like a resume) |
 
-"Dormant" is not a stored state. A companion is dormant whenever `active` and not observed; its state catches up on the next access. This keeps one code path for the simulation and avoids a background scheduler.
+Only the owner can change the lifecycle state (`POST /v1/companions/:id/lifecycle`), and only to `active`, `paused` or `archived`.
+
+"Dormant" is not a stored state and cannot be set by any client. The API may expose it as a read-only, derived field (`active` and not observed since a configured interval); the state catches up on the next access. This keeps one code path for the simulation and avoids a background scheduler.
+
+Deletion is not a lifecycle state. It is performed by `DELETE /v1/companions/:id`, which runs the cascade below. While the cascade runs and afterwards, the API returns `410 Gone` (error code `gone`) to the owner and the same "not found" response as for a nonexistent ID to anyone else.
 
 - **Creation.** Creating a character (from scratch or from an imported bundle) emits `character.created` with the initial state and a seed drawn from a cryptographically secure source and stored in world state (ADR-0002). No memories exist at creation, except owner-authored ones the owner enters explicitly.
 - **Catch-up and the "while you were away" view.** Catch-up follows ADR-0002 (whole ticks, bounded window, skip event). The away summary required by #12 is a deterministic, read-only view computed from events since the owner's last session; it is not a memory unless the owner pins it (section 2, `summary`).
@@ -65,7 +69,7 @@ A companion is a character (`chr_`) plus the world it inhabits (`wld_`). Lifecyc
 - **Import and identity.** Importing a bundle whose `character.id` does not exist on this server keeps the ID. If it exists, the import is rejected unless the owner chooses "import as copy", which assigns a new `chr_` ID and records `lineage.forkedFrom` with the original ID. Two servers may hold the same character ID with diverging state; global uniqueness and signed ownership are out of scope for v0.
 - **Move.** Moving a companion to another device or server is export, import, then an explicit, separate delete on the origin. Nothing is deleted implicitly.
 - **Deletion.** Owner-initiated, confirmed, and irreversible after completion. The cascade, in one transaction where the store allows:
-  1. Set `deleting`; revoke all grants for the character and its memories; disable its object bindings (QR/NFC resolve to "not found or not permitted", never revealing prior existence to non-owners).
+  1. Mark the character as being deleted (an internal flag, not a lifecycle state) so that every route returns as described above; revoke all grants for the character and its memories; disable its object bindings (QR/NFC resolve to "not found or not permitted", never revealing prior existence to non-owners).
   2. Hard-delete all memory records, conversation records, summaries, derived indexes and embeddings for the character.
   3. If the world contains only this character (always true in M1), hard-delete the world, its event log, snapshots, anchors metadata and room data. If other characters remain (M4), rebase the world: write a new baseline snapshot that omits the deleted character, then hard-delete all events before the baseline. Replay is guaranteed from the latest baseline, not from genesis; this is the only operation allowed to move the baseline.
   4. Keep a content-free tombstone `{ id, kind: "character", deletedAt }` so that the ID is never reused and stale links fail cleanly.
@@ -106,7 +110,7 @@ Rules:
 | `provenance.importedFrom` | For imported memories: original memory ID and bundle/export ID |
 | `createdAt`, `editedAt` | Wall-clock UTC timestamps |
 | `simTime` | Simulated time the memory refers to, if any |
-| `scope` | `private` (default) \| `invited` \| `public` (ADR-0003) |
+| `scope` | `private` (default) \| `invited`; `public` is rejected for memories (ADR-0003) |
 | `pinned` | Owner flag used by retrieval ranking |
 | `retention` | `{ policy: "until_deleted" \| "expires", expiresAt? }` |
 
@@ -116,7 +120,7 @@ A `MemoryTombstone` holds only `{ id, characterId, derivationKey?, deletedAt }` 
 
 - Every memory is `private` at creation, regardless of type or producer. No provider output, imported data or bulk action can create a non-private memory.
 - Sharing a memory requires an explicit per-memory grant (`grant_`) by the owner naming the memory ID, the grantee and the permission: `view` (grantee may read it in the UI/API) and/or `use_in_dialogue` (it may be retrieved when the grantee talks to the character). Sharing a character never implies any memory grant (ADR-0003).
-- `public` scope for an individual memory is allowed only as an explicit owner action per memory and is excluded from retrieval for anonymous sessions unless `use_in_dialogue` is also public. Bulk publication is not offered.
+- Memories can never be `public` (ADR-0003: `public` grants access only to `chr_` profiles). Schemas reject `public` for memory and conversation records, and the access check denies it for `mem_` IDs even if such a value were stored. There is no bulk sharing of memories.
 - Revocation is immediate: retrieval checks grants at request time; no cached context survives a revocation.
 - Deleting a memory deletes its grants. Deleting a source memory deletes the `summary` memories derived from it; they may be re-derived without the deleted source, and tombstones prevent re-derivation of deleted episodic memories.
 
@@ -163,8 +167,9 @@ Prompt-injection considerations:
 5. Deleting a character removes all its memories, conversation records, world events (single-character world) and grants; its QR/NFC binding resolves as not found for a non-owner.
 6. A `DialogueProvider` mock asserting on its input receives only frozen context items within budget, and never receives anchors, room data, owner identity or memories outside the audience scope.
 7. Provider `MemoryProposal`s that set scope, exceed the rate limit, exceed the text bound or reference turns outside the session are rejected and logged without content in the event log.
-8. Pausing freezes simulated time; resuming after a wall-clock gap produces no catch-up ticks for the paused interval.
+8. Pausing or archiving freezes simulated time; returning to `active` after a wall-clock gap produces no catch-up ticks for the frozen interval. A request to set `dormant` (or any value other than `active`, `paused`, `archived`) is rejected.
 9. Memory export round-trips through import with provenance preserved and scope reset to `private`.
+10. Creating or updating a memory or conversation record with scope `public` is rejected, and the access check denies `public` for `mem_` IDs.
 
 ## Risks
 
