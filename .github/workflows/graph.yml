@@ -35,7 +35,7 @@ jobs:
           test -s graphify-out/graph.json
           graphify query "architecture decisions" | head -n 20
       - name: Upload graph artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: graphify-out
           path: |
