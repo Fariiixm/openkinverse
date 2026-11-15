@@ -12,6 +12,8 @@ The exact commands will be filled in after the stack ADR is accepted. No PR may 
 - Independent QA agent report with findings categorized as blocker/major/minor/nit. Merge only with no open blocker or major finding.
 
 ## Sensitive changes
+Each change below additionally requires an independent `security-privacy-reviewer` report with no open blocker or major finding.
+
 - Auth, permissions, friends, sharing, public profiles: authorization and tenant-isolation tests.
 - Memory: inspect/edit/export/delete tests, provenance checks, retention policy tests.
 - Camera, microphone, spatial data: permission-denied behavior, no-capture/no-upload defaults and deletion tests.

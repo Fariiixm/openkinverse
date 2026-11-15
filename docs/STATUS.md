@@ -13,7 +13,7 @@
 ## Blockers requiring the owner
 
 1. **Repository administration permission.** The `gh` fine-grained token returns HTTP 403 for repository settings, branch protection and rulesets. Grant the token the repository permission **Administration: Read and write** (or apply the settings in issue #4 manually). Until then: no branch protection on `main`, auto-merge disabled, merge commits allowed.
-2. **Claude Code permission rules.** `.claude/settings.json` still lists `git commit`, `git push` and `git merge` under `ask`. Changing an agent's own permission rules was blocked by the Claude Code safety classifier, so the owner must edit it (or use `/permissions`) to remove those `ask` entries if routine prompts are unwanted.
+2. Resolved 2026-11-15: the owner removed the routine `ask` rules (checkout/switch main, commit, push, merge, rebase) from `.claude/settings.json` via `/permissions`. Only `git reset --hard` still asks. Claude Code attribution is disabled in the same file.
 
 ## Latest verified checks
 
