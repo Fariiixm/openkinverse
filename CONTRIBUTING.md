@@ -1,0 +1,26 @@
+# Contributing
+
+## Workflow
+
+1. Open or select a GitHub issue with scope and acceptance criteria.
+2. Create one branch per issue using `feat/<issue>-<slug>`, `fix/<issue>-<slug>`, `docs/<issue>-<slug>`, or `chore/<issue>-<slug>`.
+3. Keep PRs focused. Prefer one owner per module and avoid parallel edits to shared files.
+4. Run the checks listed in the relevant package README and `docs/QUALITY_GATES.md`.
+5. Open a PR using the repository template. Link the issue and include test evidence, screenshots/video where relevant, privacy impact and migration notes.
+6. Require CI, QA review and security review for sensitive changes before merge.
+
+## Commit messages
+
+Use Conventional Commits, e.g. `feat(spatial): persist room anchors`.
+
+## Architecture changes
+
+Changes affecting module boundaries, public APIs, character packages, memory, identity, sharing, spatial persistence, or provider interfaces require an ADR in `docs/decisions/`.
+
+## Security and privacy
+
+Never commit secrets, camera frames, room maps, voice recordings, private character memories, personal identifiers, or private generated assets. Report vulnerabilities privately using `SECURITY.md`.
+
+## AI-generated contributions
+
+AI agents may implement tasks but are not reviewers of their own work. Each PR must state which automated checks were run and identify any unverified assumptions. Human maintainers own merge and release decisions.

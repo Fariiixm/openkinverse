@@ -1,0 +1,11 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "python3 .claude/statusline.py",
+    "padding": 1,
+    "refreshInterval": 60
+  }
+}

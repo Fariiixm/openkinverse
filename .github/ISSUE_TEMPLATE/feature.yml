@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose a scoped product or engineering feature.
+title: "feat: "
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and user value
+      description: What user problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Proposed behavior
+      description: Describe observable behavior, not just implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Add testable checkboxes.
+      value: "- [ ] "
+    validations:
+      required: true
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Privacy, permissions and safety considerations
+      description: Camera, microphone, spatial map, memory, sharing, API keys or third-party services?
