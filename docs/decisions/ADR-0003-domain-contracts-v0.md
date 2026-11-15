@@ -1,6 +1,6 @@
 # ADR-0003: Domain contracts v0 (identity, CharacterBundle, sharing scopes)
 
-- Status: Accepted (after principal-architect review on PR #28; ADR-0003 also reviewed by security-privacy-reviewer before merge)
+- Status: Accepted (after principal-architect review on PR #28)
 - Date: 2026-11-15
 - Decision owners: Engineering lead (autonomy policy in `CLAUDE.md`); owner may override
 
@@ -17,14 +17,14 @@ Characters must be portable across devices and environments, shareable with sele
 
 ### Separate concepts
 
-| Concept | Meaning | Portable in bundle |
-| --- | --- | --- |
-| Character identity | Stable `chr_` ID, profile, personality, appearance, behavior config | Yes |
-| World / room | A home and its rooms, logical layout, object catalog | No (private by default) |
-| Spatial anchor | Device- or provider-specific pose reference for a room | Never |
-| Room map / scan | Geometry captured by a device | Never |
-| Object binding | Maps a physical identifier (QR payload, NFC tag ID, image target) to a character or object ID | Optional, without location |
-| Memory | Owner-scoped record with provenance | Only with explicit opt-in, separately |
+| Concept            | Meaning                                                                                       | Portable in bundle                    |
+| ------------------ | --------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Character identity | Stable `chr_` ID, profile, personality, appearance, behavior config                           | Yes                                   |
+| World / room       | A home and its rooms, logical layout, object catalog                                          | No (private by default)               |
+| Spatial anchor     | Device- or provider-specific pose reference for a room                                        | Never                                 |
+| Room map / scan    | Geometry captured by a device                                                                 | Never                                 |
+| Object binding     | Maps a physical identifier (QR payload, NFC tag ID, image target) to a character or object ID | Optional, without location            |
+| Memory             | Owner-scoped record with provenance                                                           | Only with explicit opt-in, separately |
 
 QR codes and NFC tags resolve identity only. Pose always comes from a tracking provider. Possession of a QR payload or NFC tag is not authorization: resolution is subject to the target's sharing scope, and a private resource resolves to the same "not found" response for non-authorized viewers, without disclosing its existence.
 

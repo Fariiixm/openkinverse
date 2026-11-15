@@ -1,6 +1,6 @@
 # ADR-0002: Backend, persistence and deterministic simulation
 
-- Status: Accepted (after principal-architect review on PR #28; ADR-0003 also reviewed by security-privacy-reviewer before merge)
+- Status: Accepted (after principal-architect review on PR #28)
 - Date: 2026-11-15
 - Decision owners: Engineering lead (autonomy policy in `CLAUDE.md`); owner may override
 
