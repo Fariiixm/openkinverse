@@ -98,11 +98,21 @@ export function repeatedPeriodEndMinute(utcMs: number, timezone: string): number
   return minuteOf(hi + earlier);
 }
 
-/** Whether `block` is active at `utcMs` in `timezone`, applying the DST rules above. */
-export function isBlockActive(block: ScheduleBlock, utcMs: number, timezone: string): boolean {
-  const minute = localMinuteOfDay(utcMs, timezone);
+interface LocalClock {
+  readonly minute: number;
+  readonly repeatEnd: number | null;
+}
+
+function localClock(utcMs: number, timezone: string): LocalClock {
+  return {
+    minute: localMinuteOfDay(utcMs, timezone),
+    repeatEnd: repeatedPeriodEndMinute(utcMs, timezone),
+  };
+}
+
+function blockActiveAt(block: ScheduleBlock, clock: LocalClock): boolean {
   const { startMinute: s, endMinute: e } = block;
-  const repeatEnd = repeatedPeriodEndMinute(utcMs, timezone);
+  const { minute, repeatEnd } = clock;
   if (repeatEnd === null) {
     return s <= e ? minute >= s && minute < e : minute >= s || minute < e;
   }
@@ -111,14 +121,21 @@ export function isBlockActive(block: ScheduleBlock, utcMs: number, timezone: str
   return s <= e ? s < repeatEnd && e >= repeatEnd : s < repeatEnd || e >= repeatEnd;
 }
 
+/** Whether `block` is active at `utcMs` in `timezone`, applying the DST rules above. */
+export function isBlockActive(block: ScheduleBlock, utcMs: number, timezone: string): boolean {
+  return blockActiveAt(block, localClock(utcMs, timezone));
+}
+
 /** Activity ID of the first schedule block active at `utcMs`, if any. */
 export function scheduledActivityAt(
   schedule: readonly ScheduleBlock[],
   utcMs: number,
   timezone: string,
 ): string | null {
+  if (schedule.length === 0) return null;
+  const clock = localClock(utcMs, timezone);
   for (const block of schedule) {
-    if (isBlockActive(block, utcMs, timezone)) return block.activityId;
+    if (blockActiveAt(block, clock)) return block.activityId;
   }
   return null;
 }
