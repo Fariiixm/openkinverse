@@ -5,7 +5,7 @@ description: Creates or reviews an Architecture Decision Record for changes affe
 # Architecture decision workflow
 
 1. Read the product vision, architecture principles, roadmap, current status and relevant existing ADRs.
-2. Query Graphify first if the decision touches existing code.
+2. If the decision touches existing code, follow the `graph-first` skill (Graphify if available, otherwise scoped Grep/Glob).
 3. State the decision, constraints, non-goals and acceptance criteria.
 4. Compare at least two viable options using device support, maturity, licensing, privacy, latency, cost, operational burden and migration path.
 5. Separate verified facts, assumptions and unknowns; cite primary documentation in the ADR.

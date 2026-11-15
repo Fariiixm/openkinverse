@@ -9,6 +9,10 @@
 5. Open a PR using the repository template. Link the issue and include test evidence, screenshots/video where relevant, privacy impact and migration notes.
 6. Require CI, QA review and security review for sensitive changes before merge.
 
+## Language
+
+Write all repository and GitHub content in professional English: source code, identifiers, comments, technical documentation, ADRs, issues, pull requests, review comments and commit messages.
+
 ## Commit messages
 
 Use Conventional Commits, e.g. `feat(spatial): persist room anchors`.
