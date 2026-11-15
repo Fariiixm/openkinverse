@@ -21,7 +21,7 @@ env:
 
 jobs:
   hygiene:
-    name: Repository hygiene and secret scan
+    name: Repository hygiene
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
