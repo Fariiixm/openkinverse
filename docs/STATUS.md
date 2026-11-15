@@ -12,7 +12,11 @@
 
 ## Blockers requiring the owner
 
-1. **Repository administration permission.** The `gh` fine-grained token returns HTTP 403 for repository settings, branch protection and rulesets. Grant the token the repository permission **Administration: Read and write** (or apply the settings in issue #4 manually). Until then: no branch protection on `main`, auto-merge disabled, merge commits allowed.
+1. Resolved 2026-11-15: the owner granted the token repository administration and workflow permissions. Verified through the GitHub API:
+   - Repository: auto-merge enabled, squash merge only (merge commits and rebase merges disabled), head branches deleted on merge.
+   - `main` branch protection: pull request required (0 approvals, because agents and owner share one GitHub account), required status check `Build knowledge graph` with strict up-to-date branches, enforced for administrators, linear history, conversation resolution required, force pushes and deletion blocked.
+   - Effect observed: PR #28 reports `mergeStateStatus: BEHIND` with no required check, so it cannot merge until updated.
+   - Pending: add the `ci` workflow checks (issue #3) as required checks once they run on `main` (tracked in issue #4).
 2. Resolved 2026-11-15: the owner removed the routine `ask` rules (checkout/switch main, commit, push, merge, rebase) from `.claude/settings.json` via `/permissions`. Only `git reset --hard` still asks. Claude Code attribution is disabled in the same file.
 
 ## Latest verified checks
@@ -21,5 +25,6 @@
 
 ## Tooling
 
-- Graphify: not installed; Grep/Glob fallback (see `docs/TOOLING.md`).
+- Graphify: `graphifyy` 0.9.111 installed by the owner (2026-11-15). Graph is a local, git-ignored artifact rebuilt with `graphify update .` and by local git hooks; CI builds it in the `graph` workflow. See `docs/TOOLING.md`.
 - GitHub CLI: installed and authenticated; issue and PR operations work; settings operations return 403.
+- Agent team (2026-11-15): devops (#8, #3), backend (#10), simulation (#11), architect (#29, PR #32; reviewed PR #28 with changes requested), qa (#30, PR #31). Agents work in isolated git worktrees under `.claude/worktrees/` (git-ignored).
