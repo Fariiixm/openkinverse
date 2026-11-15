@@ -17,6 +17,20 @@ describe('forbiddenReason', () => {
     'room-maps/kitchen.json',
     'apps/server/private-data/notes.txt',
     'model-weights/readme.txt',
+    'Room-Maps/kitchen.json',
+    'apps/server/PRIVATE-DATA/notes.txt',
+    'graphify-out/graph.json',
+    '.claude/agent-memory/qa-engineer/MEMORY.md',
+    '.claude/worktrees/agent-1/README.md',
+    'nested/.Claude/Agent-Memory/x.md',
+    'id_rsa',
+    'home/.ssh/id_ed25519',
+    'keys/id_ecdsa_sk',
+    'AuthKey_ABC123.p8',
+    'certs/client.PFX',
+    'android/release.jks',
+    'android/upload.keystore',
+    'models/tiny.gguf',
   ])('rejects %s', (path) => {
     expect(forbiddenReason(path)).not.toBeNull();
   });
@@ -28,6 +42,13 @@ describe('forbiddenReason', () => {
     'packages/core/src/index.ts',
     'docs/room-maps.md',
     'src/keyboard.ts',
+    'id_rsa.pub',
+    'home/.ssh/id_ed25519.pub',
+    'docs/id_rsa.md',
+    '.claude/agents/qa-engineer.md',
+    '.claude/skills/graph-first/SKILL.md',
+    'docs/agent-memory/notes.md',
+    'assets/sprite.bin',
   ])('allows %s', (path) => {
     expect(forbiddenReason(path)).toBeNull();
   });

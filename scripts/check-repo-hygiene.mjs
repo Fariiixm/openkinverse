@@ -25,18 +25,33 @@ export const PRIVATE_DIRECTORIES = [
   'voice-recordings',
   'generated-private-assets',
   'model-weights',
+  'graphify-out',
 ];
+
+/**
+ * Multi-segment directories with private local agent state. Matched as a
+ * contiguous run of path segments anywhere in the path.
+ */
+export const PRIVATE_NESTED_DIRECTORIES = ['.claude/agent-memory', '.claude/worktrees'];
+
+/** SSH private key file names (public `.pub` counterparts are allowed). */
+const SSH_PRIVATE_KEY_NAME = /^id_(rsa|dsa|ecdsa|ed25519)(_sk)?$/;
 
 export const FORBIDDEN_EXTENSIONS = [
   '.pem',
   '.key',
   '.p12',
+  '.p8',
+  '.pfx',
+  '.jks',
+  '.keystore',
   '.mobileprovision',
   '.onnx',
   '.safetensors',
   '.ckpt',
   '.pt',
   '.pth',
+  '.gguf',
 ];
 
 /**
@@ -54,10 +69,20 @@ export function forbiddenReason(path) {
   if (extension !== undefined) {
     return `forbidden file type ${extension} (keys, certificates or model weights)`;
   }
-  const segments = path.split('/');
-  const privateDir = segments.slice(0, -1).find((segment) => PRIVATE_DIRECTORIES.includes(segment));
+  if (SSH_PRIVATE_KEY_NAME.test(lower)) {
+    return 'SSH private key';
+  }
+  // Directory names are compared case-insensitively so that, for example,
+  // `Room-Maps/` cannot bypass the check on case-insensitive file systems.
+  const directories = path.toLowerCase().split('/').slice(0, -1);
+  const privateDir = directories.find((segment) => PRIVATE_DIRECTORIES.includes(segment));
   if (privateDir !== undefined) {
     return `inside private-data directory ${privateDir}/`;
+  }
+  const directoryPath = `/${directories.join('/')}/`;
+  const nested = PRIVATE_NESTED_DIRECTORIES.find((dir) => directoryPath.includes(`/${dir}/`));
+  if (nested !== undefined) {
+    return `inside private agent-state directory ${nested}/`;
   }
   return null;
 }
