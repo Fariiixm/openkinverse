@@ -72,7 +72,20 @@ describe('canAccess', () => {
     expect(canAccess(resource('invited', memory), [friendGrant], friend)).toBe(false);
   });
 
-  it('allows anyone for public resources', () => {
+  it.each(['mem', 'wld', 'room', 'anc', 'evt'] as const)(
+    'does not honor public for %s resources',
+    (prefix) => {
+      const rid = newId(prefix, { now: () => 0, random: () => new Uint8Array(10).fill(200) });
+      expect(canAccess(resource('public', rid), [], stranger)).toBe(false);
+      expect(canAccess(resource('public', rid), [], null)).toBe(false);
+      expect(canAccess(resource('public', rid), [], owner)).toBe(true);
+      const grant: AccessGrant = { id: id('grant'), resourceId: rid, granteeId: friend };
+      expect(canAccess(resource('public', rid), [grant], friend)).toBe(true);
+      expect(canAccess(resource('public', rid), [grant], stranger)).toBe(false);
+    },
+  );
+
+  it('allows anyone for public character profiles', () => {
     expect(canAccess(resource('public'), [], stranger)).toBe(true);
     expect(canAccess(resource('public'), [], null)).toBe(true);
   });

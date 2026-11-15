@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { CharacterIdSchema, EventIdSchema } from './ids.ts';
+import { CharacterDefinitionSchema } from './bundle.ts';
+import { CharacterIdSchema } from './ids.ts';
 import { SharingScopeSchema } from './sharing.ts';
 
 /**
@@ -7,13 +8,12 @@ import { SharingScopeSchema } from './sharing.ts';
  *
  * Shared by the companion server and its clients so request validation and
  * response types cannot drift. Request bodies are strict: unknown fields are
- * rejected. Personality traits and simulation state are simulation
+ * rejected. Personality, needs and simulation state are simulation
  * configuration and state; they do not describe real feelings.
  */
 
 export const API_VERSION = 'v1';
 
-const Unit = z.number().min(0).max(1);
 const IsoDateTime = z.iso.datetime({ offset: true });
 
 // ---------------------------------------------------------------------------
@@ -42,81 +42,25 @@ export type ApiError = z.infer<typeof ApiErrorSchema>;
 // ---------------------------------------------------------------------------
 // Companion
 
-export const COMPANION_TRAIT_KEYS = [
-  'openness',
-  'energy',
-  'sociability',
-  'curiosity',
-  'tidiness',
-] as const;
+/**
+ * The canonical companion definition: the CharacterBundle v0 character
+ * definition without its ID (the ID lives on the companion). Export and
+ * import (#18) map this 1:1 to `manifest.character`.
+ */
+export const CompanionDefinitionSchema = CharacterDefinitionSchema.omit({ id: true });
+export type CompanionDefinition = z.infer<typeof CompanionDefinitionSchema>;
 
-/** Bounded personality traits in [0, 1]. */
-export const CompanionTraitsSchema = z.strictObject({
-  openness: Unit,
-  energy: Unit,
-  sociability: Unit,
-  curiosity: Unit,
-  tidiness: Unit,
-});
-export type CompanionTraits = z.infer<typeof CompanionTraitsSchema>;
-
-export const DEFAULT_COMPANION_TRAITS: CompanionTraits = {
-  openness: 0.5,
-  energy: 0.5,
-  sociability: 0.5,
-  curiosity: 0.5,
-  tidiness: 0.5,
-};
-
-export const SchedulePresetSchema = z.enum(['day', 'night_owl', 'early_bird']);
-export type SchedulePreset = z.infer<typeof SchedulePresetSchema>;
-
-function isIanaTimeZone(value: string): boolean {
-  try {
-    new Intl.DateTimeFormat('en-US', { timeZone: value });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export const TimeZoneSchema = z
-  .string()
-  .min(1)
-  .max(64)
-  .refine(isIanaTimeZone, { message: 'Expected an IANA time zone such as "Europe/Madrid"' });
-
-/** Tick length bounds in simulated milliseconds (ADR-0002 default: 60 s). */
-export const MIN_TICK_MS = 1_000;
-export const MAX_TICK_MS = 3_600_000;
-export const DEFAULT_TICK_MS = 60_000;
-
-export const CompanionConfigSchema = z.strictObject({
-  tickMs: z.int().min(MIN_TICK_MS).max(MAX_TICK_MS),
-  timezone: TimeZoneSchema,
-  schedulePreset: SchedulePresetSchema,
-});
-export type CompanionConfig = z.infer<typeof CompanionConfigSchema>;
-
-export const DEFAULT_COMPANION_CONFIG: CompanionConfig = {
-  tickMs: DEFAULT_TICK_MS,
-  timezone: 'UTC',
-  schedulePreset: 'day',
-};
-
-/** `archived` companions do not advance. */
-export const LifecycleStateSchema = z.enum(['active', 'dormant', 'archived']);
+/**
+ * Stored lifecycle states. `paused` and `archived` companions do not advance.
+ * "Dormant" is not a stored state (an active companion that nobody observes
+ * catches up on its next access). Deletion is an operation, not a state.
+ */
+export const LifecycleStateSchema = z.enum(['active', 'paused', 'archived']);
 export type LifecycleState = z.infer<typeof LifecycleStateSchema>;
-
-const CompanionName = z.string().trim().min(1).max(100);
-const CompanionDescription = z.string().max(2000);
 
 export const CompanionSchema = z.strictObject({
   id: CharacterIdSchema,
-  name: CompanionName,
-  description: CompanionDescription,
-  personality: CompanionTraitsSchema,
-  config: CompanionConfigSchema,
+  definition: CompanionDefinitionSchema,
   lifecycle: LifecycleStateSchema,
   sharingScope: SharingScopeSchema,
   createdAt: IsoDateTime,
@@ -124,13 +68,13 @@ export const CompanionSchema = z.strictObject({
 });
 export type Companion = z.infer<typeof CompanionSchema>;
 
-export const CompanionSummarySchema = CompanionSchema.pick({
-  id: true,
-  name: true,
-  lifecycle: true,
-  sharingScope: true,
-  createdAt: true,
-  updatedAt: true,
+export const CompanionSummarySchema = z.strictObject({
+  id: CharacterIdSchema,
+  name: z.string(),
+  lifecycle: LifecycleStateSchema,
+  sharingScope: SharingScopeSchema,
+  createdAt: IsoDateTime,
+  updatedAt: IsoDateTime,
 });
 export type CompanionSummary = z.infer<typeof CompanionSummarySchema>;
 
@@ -145,8 +89,8 @@ export const CompanionStateSchema = z.strictObject({
 });
 export type CompanionState = z.infer<typeof CompanionStateSchema>;
 
+/** Events are identified by `(companionId, seq)`; `seq` is monotonic per companion. */
 export const CompanionEventSchema = z.strictObject({
-  id: EventIdSchema,
   companionId: CharacterIdSchema,
   seq: z.int().min(1),
   type: z.string().regex(/^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*$/),
@@ -159,14 +103,21 @@ export type CompanionEvent = z.infer<typeof CompanionEventSchema>;
 // ---------------------------------------------------------------------------
 // Requests and responses
 
-/** POST /v1/companions. Omitted fields take defaults; partial traits/config merge with defaults. */
-export const CreateCompanionRequestSchema = z.strictObject({
-  name: CompanionName,
-  description: CompanionDescription.optional(),
-  personality: CompanionTraitsSchema.partial().optional(),
-  config: CompanionConfigSchema.partial().optional(),
+/**
+ * POST /v1/companions. A subset of the definition; omitted fields take server
+ * defaults (empty description, default personality, schedule and needs).
+ */
+export const CreateCompanionRequestSchema = CompanionDefinitionSchema.partial().required({
+  name: true,
 });
 export type CreateCompanionRequest = z.infer<typeof CreateCompanionRequestSchema>;
+
+/** PATCH /v1/companions/:id. Replaces the given top-level definition fields. */
+export const UpdateCompanionRequestSchema = CompanionDefinitionSchema.partial().refine(
+  (body) => Object.keys(body).length > 0,
+  { message: 'At least one field is required' },
+);
+export type UpdateCompanionRequest = z.infer<typeof UpdateCompanionRequestSchema>;
 
 /** GET /v1/companions */
 export const ListCompanionsResponseSchema = z.strictObject({

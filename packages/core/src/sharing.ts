@@ -1,5 +1,12 @@
 import { z } from 'zod';
-import { AnyIdSchema, GrantIdSchema, UserIdSchema, type UserId } from './ids.ts';
+import {
+  AnyIdSchema,
+  GrantIdSchema,
+  UserIdSchema,
+  idPrefixOf,
+  type IdPrefix,
+  type UserId,
+} from './ids.ts';
 
 /**
  * Sharing scopes (ADR-0003).
@@ -38,6 +45,14 @@ export const AccessGrantSchema = z
   .strict();
 export type AccessGrant = z.infer<typeof AccessGrantSchema>;
 
+/**
+ * Resource kinds for which `public` is meaningful (ADR-0003: a public
+ * character profile is discoverable). For every other kind (memories,
+ * worlds, rooms, anchors, events, ...) `public` is not honored: access is
+ * denied unless the viewer is the owner or holds an explicit grant.
+ */
+export const PUBLIC_ELIGIBLE_PREFIXES: readonly IdPrefix[] = ['chr'];
+
 export interface ScopedResource {
   id: string;
   ownerId: string;
@@ -50,7 +65,9 @@ export interface ScopedResource {
  *
  * - Invalid resource IDs, owner IDs or scopes deny.
  * - The owner always has access.
- * - `public` resources are readable by anyone, including anonymous viewers.
+ * - `public` character profiles (`chr_`) are readable by anyone, including
+ *   anonymous viewers. `public` on any other resource kind is treated like
+ *   `invited` (owner or explicit grant only). Interaction is not covered here.
  * - `invited` resources require a grant whose `resourceId` equals the resource
  *   ID and whose `granteeId` equals the viewer. Grants never transfer between
  *   resources (sharing a profile does not share memories).
@@ -71,7 +88,11 @@ export function canAccess(
 
   if (validViewer && viewer === resource.ownerId) return true;
 
-  const resourceScope: SharingScope = scope.data;
+  const prefix = idPrefixOf(resource.id);
+  const resourceScope: SharingScope =
+    scope.data === 'public' && (prefix === undefined || !PUBLIC_ELIGIBLE_PREFIXES.includes(prefix))
+      ? 'invited'
+      : scope.data;
   switch (resourceScope) {
     case 'public':
       return true;
