@@ -39,6 +39,8 @@ npm run check     # format:check + lint + typecheck + test (same as CI)
 npm run hygiene   # validate JSON files and reject secrets, keys, model weights and private data
 ```
 
+`npm run dev` runs the `dev` script of every workspace that defines one (for example the server and the web client) concurrently, with output prefixed by workspace name; Ctrl+C stops all of them. Workspaces are discovered from the `packages/*` and `apps/*` globs, so a new app such as `apps/web` is covered by `lint`, `typecheck` (through its own `typecheck` script) and `test` (`*.test.ts` / `*.test.tsx` under `src/`) without root changes.
+
 Other scripts: `npm run format` (rewrite formatting), `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test`.
 
 Workspaces:

@@ -9,12 +9,11 @@
     "npm": ">=11"
   },
   "workspaces": [
-    "packages/core",
-    "packages/simulation",
-    "packages/mind",
-    "apps/server"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
+    "dev": "node scripts/dev.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
