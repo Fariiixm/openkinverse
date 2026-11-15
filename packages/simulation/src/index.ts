@@ -96,3 +96,13 @@ export {
   type InitialStateOptions,
   type WorldConfig,
 } from './world.ts';
+export {
+  DEFAULT_MAX_HIGHLIGHTS,
+  SUMMARY_SCHEMA_VERSION,
+  summarizeEvents,
+  type ActivityTotal,
+  type CatchUpSummary,
+  type CompanionSummary,
+  type Highlight,
+  type SummaryOptions,
+} from './summary.ts';
