@@ -31,6 +31,14 @@ describe('forbiddenReason', () => {
     'android/release.jks',
     'android/upload.keystore',
     'models/tiny.gguf',
+    'openkinverse.db',
+    'data/app.sqlite',
+    'data/app.SQLITE3',
+    'openkinverse.db-wal',
+    'openkinverse.db-shm',
+    'openkinverse.db-journal',
+    'data/app.sqlite-wal',
+    'data/app.sqlite3-journal',
   ])('rejects %s', (path) => {
     expect(forbiddenReason(path)).not.toBeNull();
   });
@@ -49,6 +57,10 @@ describe('forbiddenReason', () => {
     '.claude/skills/graph-first/SKILL.md',
     'docs/agent-memory/notes.md',
     'assets/sprite.bin',
+    'src/db.ts',
+    'src/database/index.ts',
+    'docs/sqlite.md',
+    'migrations/0001_init.sql',
   ])('allows %s', (path) => {
     expect(forbiddenReason(path)).toBeNull();
   });

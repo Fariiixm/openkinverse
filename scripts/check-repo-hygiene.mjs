@@ -55,6 +55,12 @@ export const FORBIDDEN_EXTENSIONS = [
 ];
 
 /**
+ * Local database files and their SQLite sidecars (`-wal`, `-shm`, `-journal`).
+ * The server stores private runtime data in `.local-private/openkinverse.db`.
+ */
+const DATABASE_FILE = /\.(sqlite3?|db)(-(wal|shm|journal))?$/;
+
+/**
  * Returns a reason string when the path must not be committed, otherwise null.
  * @param {string} path repository-relative path using forward slashes
  * @returns {string | null}
@@ -68,6 +74,9 @@ export function forbiddenReason(path) {
   const extension = FORBIDDEN_EXTENSIONS.find((ext) => lower.endsWith(ext));
   if (extension !== undefined) {
     return `forbidden file type ${extension} (keys, certificates or model weights)`;
+  }
+  if (DATABASE_FILE.test(lower)) {
+    return 'local database file (private runtime data)';
   }
   if (SSH_PRIVATE_KEY_NAME.test(lower)) {
     return 'SSH private key';
