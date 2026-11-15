@@ -27,4 +27,4 @@ Never commit secrets, camera frames, room maps, voice recordings, private charac
 
 ## AI-generated contributions
 
-AI agents may implement tasks but are not reviewers of their own work. Each PR must state which automated checks were run and identify any unverified assumptions. Human maintainers own merge and release decisions.
+AI agents implement, review and merge routine work under the autonomy policy in `CLAUDE.md`. An agent never reviews its own work: every PR needs an independent agent review and green CI before merge. Each PR states which checks were run, their real results and any unverified assumptions. Commits keep the real Git author and do not carry AI attribution trailers or promotional footers. The owner may veto any change or release.

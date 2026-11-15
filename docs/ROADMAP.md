@@ -41,4 +41,4 @@
 
 ## Release rule
 
-Do not mark a phase complete because agents say it is done. Require acceptance tests, reproducible setup, documentation, license/security review and a human maintainer approval.
+Do not mark a phase complete because agents say it is done. Require acceptance tests, reproducible setup, documentation, license/security review and the release checklist in `docs/QUALITY_GATES.md`. Human maintainer approval is not required for routine releases; the owner may veto any release.

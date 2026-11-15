@@ -6,4 +6,4 @@
 - `docs/<issue>-<slug>`: documentation-only changes.
 - `chore/<issue>-<slug>`: tooling, dependencies and maintenance.
 
-Use short-lived branches. Require CI checks before merge. Use squash merge or rebase consistently (maintainer chooses). Tag releases with SemVer once public interfaces exist. Never let agents force-push, merge their own PR, or publish packages/releases without explicit maintainer approval.
+Use short-lived branches. Require green CI before merge. Use squash merge only. Tag releases with SemVer once public interfaces exist. Agents never push to `main`, never force-push shared branches and never bypass required checks. Agents merge PRs after CI passes and an independent agent review reports no blocker or major finding (see `CLAUDE.md`). Releases are published only through gated workflows.

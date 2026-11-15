@@ -3,6 +3,12 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch --show-current)"
+    ],
     "deny": [
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
@@ -25,19 +31,7 @@
       "Edit(**/.env.*)"
     ],
     "ask": [
-      "Bash(git push:*)",
-      "Bash(git commit:*)",
-      "Bash(git merge:*)",
-      "Bash(git rebase:*)",
-      "Bash(git reset --hard:*)",
-      "Bash(git checkout main:*)",
-      "Bash(git switch main:*)"
-    ],
-    "allow": [
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "Bash(git branch --show-current)"
+      "Bash(git reset --hard:*)"
     ]
   },
   "statusLine": {
@@ -45,5 +39,10 @@
     "command": "py .claude/statusline.py",
     "padding": 1,
     "refreshInterval": 60
-  }
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "includeCoAuthoredBy": false
 }
