@@ -1,0 +1,37 @@
+{
+  "name": "openkinverse",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Open-source engine for persistent, portable, AI-powered companions in spatial environments.",
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25",
+    "npm": ">=11"
+  },
+  "workspaces": [
+    "packages/core",
+    "packages/simulation",
+    "packages/mind",
+    "apps/server"
+  ],
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc -p tsconfig.json && npm run typecheck --workspaces --if-present",
+    "test": "vitest run && npm run smoke:node",
+    "smoke:node": "node scripts/smoke-node-import.mjs",
+    "hygiene": "node scripts/check-repo-hygiene.mjs",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.19.2",
+    "eslint": "10.15.0",
+    "globals": "17.14.0",
+    "prettier": "3.10.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.2",
+    "vitest": "5.1.0"
+  }
+}

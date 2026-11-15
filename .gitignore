@@ -35,3 +35,11 @@ model-weights/
 *.ckpt
 *.pt
 *.pth
+
+# Claude Code local agent state and worktrees (never commit)
+.claude/agent-memory/
+.claude/worktrees/
+.claude/settings.local.json
+*.graphify-bak
+# Vendored Graphify skill: not committed (auto-installs packages and uses remote backends); use the CLI via graph-first
+.claude/skills/graphify/

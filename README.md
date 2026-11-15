@@ -29,6 +29,29 @@ OpenKinverse aims to let people create characters with identity, memory, autonom
 
 Do not start with a full social network, multi-house simulation, marketplace, or unrestricted autonomous tools. Prove the vertical slice first.
 
+## Development setup
+
+Requirements: Node.js 24 (see `.nvmrc`) and npm 11 or newer. No GPU, paid service or API key is needed for the CPU baseline.
+
+```sh
+npm ci            # install exactly what package-lock.json pins
+npm run check     # format:check + lint + typecheck + test (same as CI)
+npm run hygiene   # validate JSON files and reject secrets, keys, model weights and private data
+```
+
+Other scripts: `npm run format` (rewrite formatting), `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test`.
+
+Workspaces:
+
+| Path                  | Package                    | Purpose                                                  |
+| --------------------- | -------------------------- | -------------------------------------------------------- |
+| `packages/core`       | `@openkinverse/core`       | Identifiers, schemas and sharing scopes                  |
+| `packages/simulation` | `@openkinverse/simulation` | Deterministic simulation engine                          |
+| `packages/mind`       | `@openkinverse/mind`       | Dialogue provider interface, mock provider, intent types |
+| `apps/server`         | `@openkinverse/server`     | Fastify HTTP server                                      |
+
+Internal packages export their TypeScript sources directly (`"exports": { ".": "./src/index.ts" }`); there is no build step yet. Typechecking runs `tsc --noEmit` per workspace.
+
 ## Development status
 
 See `docs/PRODUCT_VISION.md`, `docs/ROADMAP.md`, and `docs/ARCHITECTURE_PRINCIPLES.md`.
