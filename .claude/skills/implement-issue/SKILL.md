@@ -5,7 +5,7 @@ description: Implements one scoped GitHub issue end-to-end with tests, documenta
 # Issue implementation workflow
 
 1. Read CLAUDE.md, docs/STATUS.md, docs/NEXT_SESSION.md, the issue and relevant ADRs.
-2. Query Graphify first; then inspect the actual relevant source files.
+2. Follow the `graph-first` skill (Graphify if available, otherwise scoped Grep/Glob); then inspect the actual relevant source files.
 3. Confirm scope, acceptance criteria, owner files and dependencies. If unclear, write assumptions and ask the lead rather than inventing requirements.
 4. Create/use the issue branch. Do not commit to `main`.
 5. Implement the smallest vertical change. Preserve module boundaries and provider interfaces.

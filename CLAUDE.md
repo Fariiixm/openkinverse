@@ -5,12 +5,13 @@ Build OpenKinverse: an open-source, provider-neutral platform for persistent, po
 
 ## Language
 - Communicate with the repository owner in Spanish unless asked otherwise.
-- Write source code, identifiers, comments, commit messages, PRs and maintained documentation in clear English.
+- Write everything stored in the repository or on GitHub in professional English: source code, identifiers, comments, technical documentation, ADRs, issues, pull requests, review comments and commit messages.
+- Do not mix languages in repository artifacts. Translate owner requests given in Spanish into English before recording them in issues, docs or commits.
 
 ## Before every non-trivial task
 1. Read `docs/PRODUCT_VISION.md`, `docs/ROADMAP.md`, `docs/ARCHITECTURE_PRINCIPLES.md`, and `docs/STATUS.md` (create STATUS if absent).
-2. Consult Graphify first for codebase questions using the installed `/graphify` skill/command or the installed Graphify CLI (`graphify query ...`). Do not assume which Graphify distribution is installed; inspect its help/version if the command is unknown.
-3. Use the graph to locate relevant concepts, then read the actual source files before changing them. The graph is a navigation aid, not source of truth. If stale or missing, say so and rebuild/update it using the installed version's documented command.
+2. For codebase questions, follow the `graph-first` skill: use Graphify (a `/graphify` skill/command or `graphify` CLI) if it is installed; otherwise state that it is unavailable and use scoped Grep/Glob. Do not assume which Graphify distribution is installed, and do not install one without owner approval.
+3. Use the graph (or search results) to locate relevant concepts, then read the actual source files before changing them. The graph is a navigation aid, not source of truth. If stale or missing, say so and rebuild/update it using the installed version's documented command.
 4. Read relevant ADRs in `docs/decisions/` and the linked GitHub issue/acceptance criteria.
 5. If architecture, API, data model, security, privacy, portability or compatibility changes, propose an ADR before implementation.
 
