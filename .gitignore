@@ -41,3 +41,5 @@ model-weights/
 .claude/worktrees/
 .claude/settings.local.json
 *.graphify-bak
+# Vendored Graphify skill: not committed (auto-installs packages and uses remote backends); use the CLI via graph-first
+.claude/skills/graphify/

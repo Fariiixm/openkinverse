@@ -11,7 +11,7 @@ Status: **installed** by the owner on 2026-11-15.
 
 | Path | Committed | Reason |
 | --- | --- | --- |
-| `.claude/skills/graphify/` | Yes | Lets every Claude Code session and agent worktree use `/graphify`. |
+| `.claude/skills/graphify/` | No (git-ignored) | The installer's skill auto-installs unpinned packages, may use remote LLM backends and promotes external services. Agents use the `graphify` CLI through the `graph-first` skill instead. |
 | `.claude/settings.json` hooks | Yes | Graph-first reminders before searches and reads. Hooks only add context; a missing `graphify` binary produces a non-blocking hook error. |
 | `graphify-out/` | No (git-ignored) | Rebuilt whole on every run, contains absolute local paths and caches. Regenerate locally. |
 | `*.graphify-bak` | No | Installer backups. |
