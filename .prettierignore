@@ -1,0 +1,20 @@
+node_modules/
+dist/
+build/
+coverage/
+graphify-out/
+package-lock.json
+# Owned by the engineering lead; formatted by hand.
+.claude/
+CLAUDE.md
+docs/STATUS.md
+docs/NEXT_SESSION.md
+# Pre-existing prose and templates not yet normalized; left for a follow-up
+# so this scaffold does not conflict with concurrent documentation PRs.
+.github/ISSUE_TEMPLATE/
+.github/PULL_REQUEST_TEMPLATE.md
+docs/decisions/ADR-0000-template.md
+docs/ROADMAP.md
+docs/TOOLING.md
+FIRST_PROMPT.md
+START_HERE.md

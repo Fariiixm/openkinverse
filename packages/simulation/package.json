@@ -1,0 +1,16 @@
+{
+  "name": "@openkinverse/simulation",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Deterministic simulation engine for OpenKinverse worlds.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@openkinverse/core": "0.0.0"
+  }
+}
