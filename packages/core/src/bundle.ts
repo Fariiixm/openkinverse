@@ -64,7 +64,7 @@ export const KeySchema = z
   .string()
   .regex(/^[a-z][a-z0-9_]{0,63}$/, { message: 'Expected a lowercase key ([a-z][a-z0-9_]*)' });
 
-const UnitIntervalSchema = z.number().finite().min(0).max(1);
+const UnitIntervalSchema = z.number().min(0).max(1);
 
 const MAX_PATH_LENGTH = 512;
 
@@ -141,7 +141,7 @@ export const AppearanceSchema = z
       message: 'Expected a preset reference such as "default.round-01"',
     }),
     parameters: z
-      .record(KeySchema, z.union([z.number().finite(), z.string().max(256), z.boolean()]))
+      .record(KeySchema, z.union([z.number(), z.string().max(256), z.boolean()]))
       .refine((params) => Object.keys(params).length <= 64, {
         message: 'At most 64 appearance parameters are allowed',
       })
