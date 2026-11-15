@@ -5,7 +5,14 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
-  globalIgnores(['**/node_modules/', '**/dist/', '**/build/', '**/coverage/', 'graphify-out/']),
+  globalIgnores([
+    '**/node_modules/',
+    '**/dist/',
+    '**/build/',
+    '**/coverage/',
+    'graphify-out/',
+    '.claude/',
+  ]),
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,
   {
