@@ -1,0 +1,16 @@
+{
+  "name": "@openkinverse/mind",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Dialogue provider interface, mock provider and intent proposals for OpenKinverse.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@openkinverse/core": "0.0.0"
+  }
+}
