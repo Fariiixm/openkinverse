@@ -1,15 +1,11 @@
 # Next session handoff
 
-Before coding, read `CLAUDE.md`, `docs/STATUS.md`, `docs/NEXT_SESSION.md`, `docs/PRODUCT_VISION.md`, `docs/ARCHITECTURE_PRINCIPLES.md`, and relevant ADRs. Query Graphify first if it is installed and the graph is current; otherwise use the `graph-first` skill's Grep/Glob fallback.
+Before coding, read `CLAUDE.md`, `docs/STATUS.md`, this file and the relevant ADRs. Follow the `graph-first` skill (Graphify is not installed; use the Grep/Glob fallback).
 
-## Pending review
+## Next actions (in backlog order)
 
-Branch `chore/initial-project-fixes` holds the configuration fixes from the initial audit, committed locally but not pushed. Next: owner pushes the branch and opens a PR into `main`, then enables branch protection on `main` in GitHub.
-
-## Current milestone
-
-Project foundation. No runtime implementation has been accepted yet.
-
-## Required next outcome
-
-A short architecture decision record comparing practical mobile AR options on the actual target devices, with a tiny proof-of-concept plan. Do not scaffold all services until this decision is approved.
+1. #3 CI and automated quality gates.
+2. #5–#7 ADR-0001 to ADR-0003.
+3. #8 TypeScript monorepo scaffold.
+4. #10 core domain schemas, then #11 deterministic simulation engine.
+5. Continue with the highest-priority open issue (`gh issue list --label priority:P0`, then P1).

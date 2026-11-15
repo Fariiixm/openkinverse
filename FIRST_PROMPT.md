@@ -1,3 +1,5 @@
+> **Historical bootstrap prompt.** Its approval steps are superseded by the autonomy policy in `CLAUDE.md`.
+
 You are the engineering lead for OpenKinverse. Read `CLAUDE.md`, `START_HERE.md`, `docs/PRODUCT_VISION.md`, `docs/ARCHITECTURE_PRINCIPLES.md`, `docs/ROADMAP.md`, `docs/STATUS.md`, and `docs/QUALITY_GATES.md`.
 
 This is Milestone 0: discovery and architecture selection. Do NOT implement the whole product, do NOT create a large scaffold, do NOT install frameworks or paid services, and do NOT assume a mobile runtime before verifying target-device support.

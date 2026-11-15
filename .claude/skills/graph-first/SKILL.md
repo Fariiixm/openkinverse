@@ -4,7 +4,7 @@ description: Use Graphify as the first navigation step for architecture and code
 ---
 # Graph-first repository exploration
 
-0. Check availability. If no Graphify CLI (`graphify --version`) or `/graphify` skill is found, or no graph exists and it cannot be built with an installed tool, state once in your report: "Graphify unavailable; using Grep/Glob fallback." Then follow the fallback below. Do not install Graphify or any other tool without owner approval, and do not block the task.
+0. Check availability. If no Graphify CLI (`graphify --version`) or `/graphify` skill is found, or no graph exists and it cannot be built with an installed tool, state once in your report: "Graphify unavailable; using Grep/Glob fallback." Then follow the fallback below. Install a Graphify distribution only after verifying its provenance and license (see `docs/TOOLING.md`); never block the task on it.
 1. Detect the installed Graphify distribution and version (`graphify --help`, `graphify --version`, or the available `/graphify` skill). Do not install a different distribution blindly; multiple projects use the Graphify name.
 2. If no graph exists, build it with the installed tool's documented command. Exclude generated folders, build outputs, dependency directories, secrets, user data, camera media, room maps and model weights.
 3. For a question, issue the narrowest graph query possible. Use path/explain commands where supported.

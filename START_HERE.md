@@ -49,7 +49,7 @@ Project settings enable the experimental team flag. If your installed Claude Cod
 
 ## 6. First Claude Code prompt
 
-Open `FIRST_PROMPT.md` and paste its contents into Claude Code. This first phase is discovery/planning only. Do not let agents scaffold the entire product before you approve the first architecture decision record.
+Open `FIRST_PROMPT.md` and paste its contents into Claude Code. Under the autonomy policy in `CLAUDE.md`, the lead session accepts ADRs and proceeds with implementation without waiting for owner approval.
 
 ## 7. GitHub governance
 
@@ -58,8 +58,8 @@ Before implementation:
 - Require CI and at least one review where practical.
 - Enable secret scanning and Dependabot alerts if available.
 - Use GitHub Issues for scope and acceptance criteria.
-- Use feature branches and PRs; no agent may merge/release without maintainer approval.
+- Use feature branches and PRs; agents merge only with green CI and an independent agent review (see `CLAUDE.md`).
 
-## 8. Work in milestones, not an endless agent loop
+## 8. Work in milestones with clean handoffs
 
 Use one issue at a time per workstream. Ask the lead to spawn only the agents needed for independent tasks. Before any usage limit, error or end of session, invoke `/handoff`. Resume next session by reading `docs/STATUS.md` and `docs/NEXT_SESSION.md`.
