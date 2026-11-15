@@ -20,15 +20,16 @@ The repository owner is the founder and product owner. The owner has delegated a
 
 ## Before every non-trivial task
 1. Read `docs/STATUS.md`, `docs/NEXT_SESSION.md`, and the relevant parts of `docs/PRODUCT_VISION.md`, `docs/ROADMAP.md` and `docs/ARCHITECTURE_PRINCIPLES.md`.
-2. For codebase questions, follow the `graph-first` skill: use Graphify if it is installed; otherwise state that it is unavailable and use scoped Grep/Glob.
-3. Read the actual source files before changing them. A graph or search result is a navigation aid, not source of truth.
-4. Read relevant ADRs in `docs/decisions/` and the linked GitHub issue and acceptance criteria.
-5. If architecture, public API, data model, security, privacy, portability or compatibility changes, write or update an ADR before or with the implementation. The lead accepts ADRs after `principal-architect` input and, for security- or privacy-relevant decisions, `security-privacy-reviewer` input. The owner may override any ADR at any time.
+2. For codebase and architecture questions, follow the `graph-first` skill. When `graphify-out/graph.json` exists, run `graphify query "<question>"` (or `graphify path "A" "B"`, `graphify explain "X"`, `graphify section "<heading>"`) before the first Grep, search or source-file read. In a fresh worktree or checkout, run `graphify update .` first to build the graph. Use `graphify-out/GRAPH_REPORT.md` only for broad architecture reviews. Without Graphify, state that it is unavailable and use scoped Grep/Glob.
+3. Read the actual source files before changing them. A graph or search result is a navigation aid, not source of truth. After changing code, run `graphify update .` (AST-only, local, no API cost); the installed git hooks also do this after commits and checkouts.
+4. Include the graph-first rule in every subagent prompt that explores code.
+5. Read relevant ADRs in `docs/decisions/` and the linked GitHub issue and acceptance criteria.
+6. If architecture, public API, data model, security, privacy, portability or compatibility changes, write or update an ADR before or with the implementation. The lead accepts ADRs after `principal-architect` input and, for security- or privacy-relevant decisions, `security-privacy-reviewer` input. The owner may override any ADR at any time.
 
 ## Engineering rules
 - Prefer a modular monolith and explicit module boundaries until measured scale justifies services.
 - Never invent functionality, test results, benchmark results, API availability or compatibility claims.
-- Never silently add a paid API, external service, telemetry, analytics or user-data upload. Adding any of these is an owner escalation.
+- Never silently add a paid API, external service, telemetry, analytics or user-data upload. Adding any of these is an owner escalation. This includes Graphify semantic extraction or community labeling through remote LLM backends (for example Gemini or OpenAI API keys); only local AST updates are allowed by default.
 - Provider integrations must be behind typed, versioned interfaces and have a local/mock test path.
 - Keep deterministic simulation (world state, movement, needs, schedule, relationship scores) separate from probabilistic LLM output.
 - LLMs may propose structured intents; deterministic validators decide whether an action is legal and execute it. Never execute model-generated shell commands or arbitrary code from character agents.

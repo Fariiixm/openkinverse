@@ -4,14 +4,20 @@ description: Use Graphify as the first navigation step for architecture and code
 ---
 # Graph-first repository exploration
 
-0. Check availability. If no Graphify CLI (`graphify --version`) or `/graphify` skill is found, or no graph exists and it cannot be built with an installed tool, state once in your report: "Graphify unavailable; using Grep/Glob fallback." Then follow the fallback below. Install a Graphify distribution only after verifying its provenance and license (see `docs/TOOLING.md`); never block the task on it.
-1. Detect the installed Graphify distribution and version (`graphify --help`, `graphify --version`, or the available `/graphify` skill). Do not install a different distribution blindly; multiple projects use the Graphify name.
-2. If no graph exists, build it with the installed tool's documented command. Exclude generated folders, build outputs, dependency directories, secrets, user data, camera media, room maps and model weights.
-3. For a question, issue the narrowest graph query possible. Use path/explain commands where supported.
-4. Open only source files that the graph identifies as relevant, then verify the implementation in the actual files. Graph edges can be inferred or stale.
-5. If graph output conflicts with source, source wins; refresh the graph and report the discrepancy.
-6. After substantial structural changes, update the graph and verify changed-file coverage.
-7. Never paste the complete graph or report into the main context unless necessary. Return a short summary, key paths and confidence/ambiguity.
+The project uses Graphify (`graphifyy` 0.9.111, CLI `graphify`). See `docs/TOOLING.md` for installation and policy.
+
+0. Check availability: `graphify --version`. If the command is missing, state once: "Graphify unavailable; using Grep/Glob fallback." and follow the fallback below. Never block the task on Graphify.
+1. Make sure the graph exists and is current. `graphify-out/` is a local, git-ignored artifact, so a fresh clone or agent worktree has no graph: run `graphify update .` (local AST extraction, no LLM, no network). Run it again after changing code. In the main checkout, git hooks installed with `graphify hook install` refresh it after commits, merges and checkouts.
+2. Ask the narrowest question possible:
+   - `graphify query "<question>"` for where something lives and what it relates to.
+   - `graphify path "<A>" "<B>"` for a dependency or relationship between two concepts.
+   - `graphify explain "<concept>"` for a node and its neighbors.
+   - `graphify section "<heading>"` to print a Markdown section without opening the file.
+   - `graphify-out/GRAPH_REPORT.md` only for broad architecture reviews.
+3. Open only the source files and line ranges the graph identifies, then verify the implementation in the actual files. Graph edges can be inferred or stale.
+4. If graph output conflicts with source, source wins: run `graphify update .` and report the discrepancy.
+5. Do not run semantic extraction or community labeling with remote LLM backends (`graphify label`, `--backend`, API keys). That uploads repository content to a third party and requires owner escalation.
+6. Never paste the complete graph or report into the main context. Return a short summary, key paths and confidence.
 
 ## Fallback without Graphify
 
